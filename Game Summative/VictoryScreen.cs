@@ -60,14 +60,28 @@ namespace Game_Summative
 
         private void ReplayButton_Click(object sender, EventArgs e)
         {
-
             // Loading the main Game Screen
             Form f = this.FindForm();
             f.Controls.Remove(this);
             GameScreen gs = new GameScreen();
-            gs.Location = new Point(Form1.gameScreenPositionX, Form1.gameScreenPositionY);
+
+            gs.Size = new Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
+            int screenX = (Form1.screenWidth - gs.Width) / 2;
+            int screenY = (Form1.screenHeight - gs.Height) / 2;
+            gs.Location = new Point(screenX, screenY);
+            //gs.Size = new Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
             f.Controls.Add(gs);
             gs.Focus();
+        }
+
+        private void MainMenuButton_Click(object sender, EventArgs e)
+        {
+            Form f = this.FindForm();
+            f.Controls.Remove(this);
+            MainMenu mm = new MainMenu();
+            mm.Location = new Point((Form1.screenWidth - mm.Width) / 2, (Form1.screenHeight - mm.Height) / 2);
+            f.Controls.Add(mm);
+            mm.Focus();
         }
     }
 }

@@ -23,12 +23,29 @@ namespace Game_Summative
             Form f = this.FindForm();
             f.Controls.Remove(this);
             GameScreen gs = new GameScreen();
-            Form1.gameScreenPositionX = (this.Width - gs.Width) / 2;
-            Form1.gameScreenPositionY = (this.Height - gs.Height) / 2;
-            gs.Location = new Point(Form1.gameScreenPositionX, Form1.gameScreenPositionY);
+            
+            gs.Size = new Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
+            int screenX = (Form1.screenWidth - gs.Width) / 2;
+            int screenY = (Form1.screenHeight - gs.Height) / 2;
+            gs.Location = new Point(screenX, screenY);
+            //gs.Size = new Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
             f.Controls.Add(gs);
             gs.Focus();
         }
 
+        private void SettingsButton_Click(object sender, EventArgs e)
+        {
+            Form f = this.FindForm();
+            f.Controls.Remove(this);
+            SettingScreen ss = new SettingScreen();
+            ss.Location = new Point((Form1.screenWidth - ss.Width) / 2, (Form1.screenHeight - ss.Height) / 2);
+            f.Controls.Add(ss);
+            ss.Focus();
+        }
+
+        private void ExitButton_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Application.Exit();
+        }
     }
 }

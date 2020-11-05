@@ -23,18 +23,53 @@ namespace Game_Summative
         int currentLevel = 1;
 
         // Initialize the movement key booleans.
-        bool upDown, leftDown, downDown, rightDown, spaceDown;
+        bool upDown, leftDown, downDown, rightDown, resetdown, pauseDown;
 
         // boolean to prevent accidental movement by requiring a new keypress before initializing movement
         bool keyPress = false;
 
         // Set up the black and white brushes for colouring the grid in.
-        SolidBrush gridLineBrush = new SolidBrush(Color.White);
-        SolidBrush gridSpaceBrush = new SolidBrush(Color.Black);
-        SolidBrush characterBrush = new SolidBrush(Color.Blue);
-        SolidBrush trapBrush = new SolidBrush(Color.Red);
-        SolidBrush enemyBrush = new SolidBrush(Color.Green);
-        SolidBrush wallBrush = new SolidBrush(Color.Gray);
+        SolidBrush gridLineBrush = new SolidBrush(Color.Black);
+        SolidBrush gridSpaceBrush = new SolidBrush(Color.MidnightBlue);
+
+        // Image Initialization
+        /*
+        Image characterSprite1 = Properties.Resources.Cobalt1;
+        Image characterSprite2 = Properties.Resources.Cobalt2;
+        Image characterSprite3 = Properties.Resources.Cobalt1;
+        Image characterSprite4 = Properties.Resources.Cobalt2;
+        Image characterSprite5 = Properties.Resources.Cobalt1;
+        Image characterSprite6 = Properties.Resources.Cobalt2;
+        Image characterSprite7 = Properties.Resources.Cobalt1;
+        Image characterSprite8 = Properties.Resources.Cobalt2;
+        Image characterSprite9 = Properties.Resources.Cobalt1;
+        Image characterSprite10 = Properties.Resources.Cobalt2;
+        Image characterSprite11 = Properties.Resources.Cobalt1;
+        Image characterSprite12 = Properties.Resources.Cobalt2;
+        */
+
+        String characterType;
+        Image characterSprite1;
+        Image characterSprite2;
+        
+        Image enemyOne1 = Properties.Resources.Shambles_Sprite1;
+        Image enemyOne2 = Properties.Resources.Shambles_Sprite2;
+        Image enemyTwo1 = Properties.Resources.Skulk_Sprite1;
+        Image enemyTwo2 = Properties.Resources.Skulk_Sprite2;
+        Image enemyThree1 = Properties.Resources.Puppeteer_Sprite1;
+        Image enemyThree2 = Properties.Resources.Puppeteer_Sprite2;
+        Image enemyFour1 = Properties.Resources.Screecher_Sprite1;
+        Image enemyFour2 = Properties.Resources.Screecher_Sprite2;
+        Image enemyFive1 = Properties.Resources.Mimic_Sprite1;
+        Image enemyFive2 = Properties.Resources.Mimic_Sprite2;
+        Image trapSprite = Properties.Resources.Trap_Sprite;
+        Image wallSprite = Properties.Resources.Wall_Sprite;
+
+        // Idle animation toggle
+        int idleMode = 1;
+
+        // Enemy type randomizer
+        Random randGen = new Random();
 
         // Sound Setup
         SoundPlayer buttonSound = new SoundPlayer(Properties.Resources.ButtonPress);
@@ -51,6 +86,7 @@ namespace Game_Summative
 
         // Setup for the movement locks
         bool movingUp, movingRight, movingDown, movingLeft;
+
 
         bool reloaded = false;
         // Detect when the player runs into traps
@@ -76,15 +112,15 @@ namespace Game_Summative
             charSize = squareSize * (float)0.75;
 
             // Calculate the position of each gridspace and create a list containing every grid space and it's position on the screen.
-            for (int n = 1; n < 8; n++)
+            for (int y = 1; y < 8; y++)
             {
-                for (int i = 1; i < 8; i++)
+                for (int x = 1; x < 8; x++)
                 {
-                    float screenX = (((i - 1) * (squareSize + lineSize)) + lineSize + ((this.Width - gridSize) / 2));
-                    float screenY = (((n - 1) * (squareSize + lineSize)) + lineSize + ((this.Height - gridSize) / 2));
+                    float screenX = (((x - 1) * (squareSize + lineSize)) + lineSize + ((Form1.screenWidth - gridSize) / 2));
+                    float screenY = (((y - 1) * (squareSize + lineSize)) + lineSize + ((Form1.screenHeight - gridSize) / 2));
                     float charScreenX = screenX + ((squareSize - charSize) / 2);
                     float charScreenY = screenY + ((squareSize - charSize) / 2);
-                    Grid newGrid = new Grid(i, n, screenX, screenY, charScreenX, charScreenY, squareSize, false, false, false);
+                    Grid newGrid = new Grid(x, y, screenX, screenY, charScreenX, charScreenY, squareSize, false, false, false);
                     grid.Add(newGrid);
                 }
             }
@@ -105,8 +141,14 @@ namespace Game_Summative
             knightBox.Width = knight.characterSize;
             knightBox.Height = knight.characterSize;
 
+            // Character sprite initialization
+            characterType = "Resources/" + Form1.characterSprite + "1.png";
+            characterSprite1 = Image.FromFile(characterType);
+            characterType = "Resources/" + Form1.characterSprite + "2.png";
+            characterSprite2 = Image.FromFile(characterType);
+
             // Enabling the timer function upon initialization
-            timer1.Enabled = true;
+            mainTimer.Enabled = true;
 
             loadLevel(currentLevel);
         }
@@ -133,25 +175,37 @@ namespace Game_Summative
                     reloaded = false;
                     break;
 
-                case Keys.V:
+                case Keys.B:
                     upDown = true;
                     reloaded = false;
                     break;
-                case Keys.C:
+                case Keys.N:
                     leftDown = true;
                     reloaded = false;
                     break;
-                case Keys.Z:
+                case Keys.M:
                     downDown = true;
                     reloaded = false;
                     break;
-                case Keys.X:
+                case Keys.Space:
                     rightDown = true;
                     reloaded = false;
                     break;
 
-                case Keys.Space:
-                    spaceDown = true;
+                case Keys.R:
+                    resetdown = true;
+                    break;
+                case Keys.Up:
+                    resetdown = true;
+                    break;
+                case Keys.Right:
+                    resetdown = true;
+                    break;
+                case Keys.Down:
+                    resetdown = true;
+                    break;
+                case Keys.Left:
+                    resetdown = true;
                     break;
             }
 
@@ -180,26 +234,38 @@ namespace Game_Summative
                     keyPress = false;
                     break;
 
-                case Keys.V:
+                case Keys.B:
                     upDown = false;
                     keyPress = false;
                     break;
-                case Keys.C:
+                case Keys.N:
                     leftDown = false;
                     keyPress = false;
                     break;
-                case Keys.Z:
+                case Keys.M:
                     downDown = false;
                     keyPress = false;
                     break;
-                case Keys.X:
+                case Keys.Space:
                     rightDown = false;
                     keyPress = false;
                     break;
 
-                case Keys.Space:
-                    spaceDown = false;
+                case Keys.R:
+                    resetdown = false;
                     keyPress = false;
+                    break;
+                case Keys.Up:
+                    resetdown = false;
+                    break;
+                case Keys.Right:
+                    resetdown = false;
+                    break;
+                case Keys.Down:
+                    resetdown = false;
+                    break;
+                case Keys.Left:
+                    resetdown = false;
                     break;
             }
             // Detection for menu buttons up
@@ -207,6 +273,13 @@ namespace Game_Summative
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
+            idleMode++;
+
+            if (idleMode == 15)
+            {
+                idleMode = -15;
+            }
+
             // Updating rectangle position.
             knightBox.X = knight.x;
             knightBox.Y = knight.y;
@@ -604,22 +677,23 @@ namespace Game_Summative
                 Form1.moves = Form1.moves + levelMoves;
                 levelMoves = 0;
                 currentLevel++;
-                if (currentLevel == 5) // 1+ the number of levels to loop level gameplay
+                if (currentLevel == 20) // 1+ the number of levels to loop level gameplay
                 {
                     // Loading the victory screen
                     Form f = this.FindForm();
                     f.Controls.Remove(this);
                     VictoryScreen vs = new VictoryScreen();
-                    vs.Location = new Point((this.Width - vs.Width) / 2, (this.Height - vs.Height) / 2);
+                    vs.Location = new Point((Form1.screenWidth - vs.Width) / 2, (Form1.screenHeight - vs.Height) / 2);
+
                     f.Controls.Add(vs);
                     vs.Focus();
                 }
-
+            
                 loadLevel(currentLevel);
 
             }
 
-            if (spaceDown == true && keyPress == false && reloaded == false)
+            if (resetdown == true && keyPress == false && reloaded == false)
             {
                 buttonSound.Play();
                 loadLevel(currentLevel);
@@ -639,32 +713,98 @@ namespace Game_Summative
             // Colouring each grid space
             foreach (Grid g in grid)
             {
-                if (g.trapped == true)
+                if (g.trapped == true) // Traps
                 {
-                    e.Graphics.FillRectangle(trapBrush, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                    e.Graphics.FillRectangle(gridSpaceBrush, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                    e.Graphics.DrawImage(trapSprite, g.screenX, g.screenY, g.squareSize, g.squareSize);
                 }
-                else if (g.walled == true)
+                else if (g.walled == true) // Walls
                 {
-                    e.Graphics.FillRectangle(wallBrush, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                    e.Graphics.DrawImage(wallSprite, g.screenX, g.screenY, g.squareSize, g.squareSize);
                 }
-                else
+                else // Empty
                 {
                     e.Graphics.FillRectangle(gridSpaceBrush, g.screenX, g.screenY, g.squareSize, g.squareSize);
                 }
             }
 
-            foreach (Enemy n in enemy)
+            if (idleMode >= 1)
             {
-                e.Graphics.FillRectangle(enemyBrush, n.x, n.y, n.enemySize, n.enemySize);
+                foreach (Enemy n in enemy) // Enemies
+                {
+                    if (n.type == 1)
+                    {
+
+                        e.Graphics.DrawImage(enemyOne1, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                    else if (n.type == 2)
+                    {
+
+                        e.Graphics.DrawImage(enemyTwo1, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                    else if (n.type == 3)
+                    {
+
+                        e.Graphics.DrawImage(enemyThree1, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                    else if (n.type == 4)
+                    {
+
+                        e.Graphics.DrawImage(enemyFour1, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                    else
+                    {
+
+                        e.Graphics.DrawImage(enemyFive1, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                }
+            }
+            else
+            {
+                foreach (Enemy n in enemy) // Enemies
+                {
+                    if (n.type == 1)
+                    {
+
+                        e.Graphics.DrawImage(enemyOne2, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                    else if (n.type == 2)
+                    {
+
+                        e.Graphics.DrawImage(enemyTwo2, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                    else if (n.type == 3)
+                    {
+
+                        e.Graphics.DrawImage(enemyThree2, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                    else if (n.type == 4)
+                    {
+
+                        e.Graphics.DrawImage(enemyFour2, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                    else
+                    {
+
+                        e.Graphics.DrawImage(enemyFive2, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                }
             }
 
             // Colouring the player character
-            e.Graphics.FillRectangle(characterBrush, knightBox);
-
+            if (idleMode >= 1)
+            {
+                e.Graphics.DrawImage(characterSprite1, knightBox);
+            }
+            else
+            {
+                e.Graphics.DrawImage(characterSprite2, knightBox);
+            }
         }
 
         private void loadLevel(int level)
         {
+            Bitmap myBitmap;
             // Level Reset Code
             foreach (Grid g in grid)
             {
@@ -676,259 +816,63 @@ namespace Game_Summative
             {
                 enemy.RemoveAt(0);
             }
+            // Create a Bitmap object from an image file.
 
+            string levelFile = "Resources/level" + level + ".png";
 
-            if (level == 1)
+            try
             {
+                myBitmap = new Bitmap(levelFile);
+                for (int y = 1; y < 8; y++)
+                {
+                    for (int x = 1; x < 8; x++)
+                    {
+                        // Get the color of a pixel within myBitmap
+                        Color pixelColour = myBitmap.GetPixel(x - 1, y - 1);
 
-                // Player Spawn Code
-                gridIndex = grid.FindIndex(x => (x.xPos == 3) && (x.yPos == 2));
+                        int red = pixelColour.R;
+                        int green = pixelColour.G;
+                        int blue = pixelColour.B;
 
-                knight.posX = 3;
-                knight.posY = 2;
-                knight.x = grid[gridIndex].charScreenX;
-                knight.y = grid[gridIndex].charScreenY;
+                        if (red <= 20 && green <= 20 && blue <= 20) // Nothing Placement
+                        {
+                            // Empty Space
+                        }
+                        else if (red > green && red > blue) // Trap Placement
+                        {
+                            gridIndex = grid.FindIndex(g => (g.xPos == x) && (g.yPos == y));
+                            grid[gridIndex].trapped = true;
+                        }
+                        else if (green > red && green > blue) // Enemy Placement
+                        {
 
-                // Enemy Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 5) && (x.yPos == 2));
-                float enemyXPos = grid[gridIndex].charScreenX;
-                float enemyYPos = grid[gridIndex].charScreenY;
-                Enemy newEnemy = new Enemy(5, 2, charSize, enemyXPos, enemyYPos);
-                enemy.Add(newEnemy);
-                grid[gridIndex].guarded = true;
-
-                gridIndex = grid.FindIndex(x => (x.xPos == 4) && (x.yPos == 6));
-                enemyXPos = grid[gridIndex].charScreenX;
-                enemyYPos = grid[gridIndex].charScreenY;
-                newEnemy = new Enemy(4, 6, charSize, enemyXPos, enemyYPos);
-                enemy.Add(newEnemy);
-                grid[gridIndex].guarded = true;
-
-                gridIndex = grid.FindIndex(x => (x.xPos == 2) && (x.yPos == 3));
-                enemyXPos = grid[gridIndex].charScreenX;
-                enemyYPos = grid[gridIndex].charScreenY;
-                newEnemy = new Enemy(2, 3, charSize, enemyXPos, enemyYPos);
-                enemy.Add(newEnemy);
-                grid[gridIndex].guarded = true;
-
-                // Wall Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 4));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 2) && (x.yPos == 4));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 6) && (x.yPos == 5));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 7));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 2) && (x.yPos == 7));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 3) && (x.yPos == 7));
-                grid[gridIndex].walled = true;
-
-                // Trap Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 4) && (x.yPos == 7));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 6) && (x.yPos == 1));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 2));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 3));
-                grid[gridIndex].trapped = true;
-
+                            gridIndex = grid.FindIndex(g => (g.xPos == x) && (g.yPos == y));
+                            float enemyXPos = grid[gridIndex].charScreenX;
+                            float enemyYPos = grid[gridIndex].charScreenY;
+                            Enemy newEnemy = new Enemy(x, y, charSize, enemyXPos, enemyYPos, randGen.Next(1, 6));
+                            enemy.Add(newEnemy);
+                            grid[gridIndex].guarded = true;
+                        }
+                        else if (blue > red && blue > green) // Character Placement
+                        {
+                            gridIndex = grid.FindIndex(g => (g.xPos == x) && (g.yPos == y));
+                            knight.posX = x;
+                            knight.posY = y;
+                            knight.x = grid[gridIndex].charScreenX;
+                            knight.y = grid[gridIndex].charScreenY;
+                        }
+                        else // Wall placement
+                        {
+                            gridIndex = grid.FindIndex(g => (g.xPos == x) && (g.yPos == y));
+                            grid[gridIndex].walled = true;
+                        }
+                    } //End of X for statement
+                } //End of y for statement
             }
-            else if (level == 2)
+            catch
             {
-                // Player Spawn Code
-                gridIndex = grid.FindIndex(x => (x.xPos == 2) && (x.yPos == 6));
-
-                knight.posX = 2;
-                knight.posY = 6;
-                knight.x = grid[gridIndex].charScreenX;
-                knight.y = grid[gridIndex].charScreenY;
-
-                // Enemy Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 3));
-                float enemyXPos = grid[gridIndex].charScreenX;
-                float enemyYPos = grid[gridIndex].charScreenY;
-                Enemy newEnemy = new Enemy(1, 3, charSize, enemyXPos, enemyYPos);
-                enemy.Add(newEnemy);
-                grid[gridIndex].guarded = true;
-
-                gridIndex = grid.FindIndex(x => (x.xPos == 4) && (x.yPos == 4));
-                enemyXPos = grid[gridIndex].charScreenX;
-                enemyYPos = grid[gridIndex].charScreenY;
-                newEnemy = new Enemy(4, 4, charSize, enemyXPos, enemyYPos);
-                enemy.Add(newEnemy);
-                grid[gridIndex].guarded = true;
-
-                gridIndex = grid.FindIndex(x => (x.xPos == 6) && (x.yPos == 6));
-                enemyXPos = grid[gridIndex].charScreenX;
-                enemyYPos = grid[gridIndex].charScreenY;
-                newEnemy = new Enemy(6, 6, charSize, enemyXPos, enemyYPos);
-                enemy.Add(newEnemy);
-                grid[gridIndex].guarded = true;
-
-                // Wall Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 6));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 7));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 3) && (x.yPos == 7));
-                grid[gridIndex].walled = true;
-
-                // Trap Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 1));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 2) && (x.yPos == 1));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 3) && (x.yPos == 1));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 4) && (x.yPos == 1));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 1));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 2));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 3));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 4));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 5));
-                grid[gridIndex].trapped = true;
+                // Boss fight room
             }
-            else if (level == 3)
-            {
-                // Player Spawn Code
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 3));
-
-                knight.posX = 1;
-                knight.posY = 3;
-                knight.x = grid[gridIndex].charScreenX;
-                knight.y = grid[gridIndex].charScreenY;
-
-                // Enemy Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 3) && (x.yPos == 3));
-                float enemyXPos = grid[gridIndex].charScreenX;
-                float enemyYPos = grid[gridIndex].charScreenY;
-                Enemy newEnemy = new Enemy(3, 3, charSize, enemyXPos, enemyYPos);
-                enemy.Add(newEnemy);
-                grid[gridIndex].guarded = true;
-
-                gridIndex = grid.FindIndex(x => (x.xPos == 5) && (x.yPos == 3));
-                enemyXPos = grid[gridIndex].charScreenX;
-                enemyYPos = grid[gridIndex].charScreenY;
-                newEnemy = new Enemy(5, 3, charSize, enemyXPos, enemyYPos);
-                enemy.Add(newEnemy);
-                grid[gridIndex].guarded = true;
-
-                gridIndex = grid.FindIndex(x => (x.xPos == 6) && (x.yPos == 3));
-                enemyXPos = grid[gridIndex].charScreenX;
-                enemyYPos = grid[gridIndex].charScreenY;
-                newEnemy = new Enemy(6, 3, charSize, enemyXPos, enemyYPos);
-                enemy.Add(newEnemy);
-                grid[gridIndex].guarded = true;
-
-                // Wall Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 1));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 2));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 4) && (x.yPos == 1));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 3) && (x.yPos == 6));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 3) && (x.yPos == 7));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 6) && (x.yPos == 7));
-                grid[gridIndex].walled = true;
-
-                // Trap Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 5) && (x.yPos == 1));
-                grid[gridIndex].trapped = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 7));
-                grid[gridIndex].trapped = true;
-                
-            }
-            else if (level == 4)
-            {
-                // Player Spawn Code
-                gridIndex = grid.FindIndex(x => (x.xPos == 4) && (x.yPos == 7));
-
-                knight.posX = 4;
-                knight.posY = 7;
-                knight.x = grid[gridIndex].charScreenX;
-                knight.y = grid[gridIndex].charScreenY;
-
-                // Enemy Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 3) && (x.yPos == 3));
-                float enemyXPos = grid[gridIndex].charScreenX;
-                float enemyYPos = grid[gridIndex].charScreenY;
-                Enemy newEnemy = new Enemy(3, 3, charSize, enemyXPos, enemyYPos);
-                enemy.Add(newEnemy);
-                grid[gridIndex].guarded = true;
-
-                // Wall Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 1));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 2));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 6) && (x.yPos == 3));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 4) && (x.yPos == 2));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 6) && (x.yPos == 6));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 5) && (x.yPos == 6));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 6));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 7));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 3) && (x.yPos == 4));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 6) && (x.yPos == 1));
-                grid[gridIndex].walled = true;
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 1));
-                grid[gridIndex].walled = true;
-
-                // Trap Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 7) && (x.yPos == 7));
-                grid[gridIndex].trapped = true;
-
-            }
-            /*else if (level == "level number")
-            {
-
-            // Player Spawn Code
-                gridIndex = grid.FindIndex(x => (x.xPos == 3) && (x.yPos == 2));
-
-                knight.posX = 3;
-                knight.posY = 2;
-                knight.x = grid[gridIndex].charScreenX;
-                knight.y = grid[gridIndex].charScreenY;
-
-                // Enemy Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 1));
-                float enemyXPos = grid[gridIndex].charScreenX;
-                float enemyYPos = grid[gridIndex].charScreenY;
-                Enemy newEnemy = new Enemy(1, 1, charSize, enemyXPos, enemyYPos);
-                enemy.Add(newEnemy);
-                grid[gridIndex].guarded = true;
-
-                // Wall Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 2));
-                grid[gridIndex].walled = true;
-                
-                // Trap Code Layout
-                gridIndex = grid.FindIndex(x => (x.xPos == 1) && (x.yPos == 2));
-                grid[gridIndex].trapped = true;
-                
-            }*/
-
         }
-
-
     }
-
-
 }

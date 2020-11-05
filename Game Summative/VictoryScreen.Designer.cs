@@ -32,6 +32,7 @@
             this.motivationOutput = new System.Windows.Forms.Label();
             this.parOutput = new System.Windows.Forms.Label();
             this.replayButton = new System.Windows.Forms.Button();
+            this.MainMenuButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // scoreOutput
@@ -72,17 +73,29 @@
             this.replayButton.Font = new System.Drawing.Font("OCR A Extended", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.replayButton.Location = new System.Drawing.Point(212, 223);
             this.replayButton.Name = "replayButton";
-            this.replayButton.Size = new System.Drawing.Size(127, 23);
+            this.replayButton.Size = new System.Drawing.Size(127, 35);
             this.replayButton.TabIndex = 3;
             this.replayButton.Text = "Try Again?";
             this.replayButton.UseVisualStyleBackColor = true;
             this.replayButton.Click += new System.EventHandler(this.ReplayButton_Click);
+            // 
+            // MainMenuButton
+            // 
+            this.MainMenuButton.Font = new System.Drawing.Font("OCR A Extended", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MainMenuButton.Location = new System.Drawing.Point(212, 264);
+            this.MainMenuButton.Name = "MainMenuButton";
+            this.MainMenuButton.Size = new System.Drawing.Size(126, 35);
+            this.MainMenuButton.TabIndex = 4;
+            this.MainMenuButton.Text = "Main Menu";
+            this.MainMenuButton.UseVisualStyleBackColor = true;
+            this.MainMenuButton.Click += new System.EventHandler(this.MainMenuButton_Click);
             // 
             // VictoryScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Controls.Add(this.MainMenuButton);
             this.Controls.Add(this.replayButton);
             this.Controls.Add(this.parOutput);
             this.Controls.Add(this.motivationOutput);
@@ -99,5 +112,6 @@
         private System.Windows.Forms.Label motivationOutput;
         private System.Windows.Forms.Label parOutput;
         private System.Windows.Forms.Button replayButton;
+        private System.Windows.Forms.Button MainMenuButton;
     }
 }

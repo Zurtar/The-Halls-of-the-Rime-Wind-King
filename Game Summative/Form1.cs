@@ -12,25 +12,32 @@ namespace Game_Summative
 {
     public partial class Form1 : Form
     {
-
         //static global float gameScreenPosition;
 
         public Form1()
         {
             InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
+            this.FormBorderStyle = FormBorderStyle.None;
+
         }
 
-         public static int gameScreenPositionX;
-         public static int gameScreenPositionY;
+        public static int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
+        public static int screenHeight = Screen.PrimaryScreen.WorkingArea.Height;
 
-         public static int moves;
+        public static string characterSprite;
+
+        public static int moves;
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Character Sprite easter egg
+            characterSprite = "Cobalt";
+
             // Initializing the main menu
             MainMenu mm = new MainMenu();
             this.Controls.Add(mm);
-            mm.Location = new Point((this.Width - mm.Width) / 2, (this.Height - mm.Height) / 2);
+            mm.Location = new Point((screenWidth - mm.Width) / 2, (screenHeight - mm.Height) / 2);
         }
     }
 }
