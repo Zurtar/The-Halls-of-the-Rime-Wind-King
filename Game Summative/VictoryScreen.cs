@@ -14,6 +14,8 @@ namespace Game_Summative
     {
         public VictoryScreen()
         {
+            Cursor.Show();
+
             InitializeComponent();
 
             int score, eagle = 100, birdie = 110, par = 125, bogey = 140;

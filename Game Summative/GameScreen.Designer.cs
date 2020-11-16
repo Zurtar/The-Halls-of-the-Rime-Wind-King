@@ -53,7 +53,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Timer mainTimer;
     }
 }

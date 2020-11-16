@@ -29,6 +29,10 @@ namespace Game_Summative
 
         public static int moves;
 
+        public static bool pauseReset = false;
+
+        public static bool pauseMenu = false;
+
         private void Form1_Load(object sender, EventArgs e)
         {
             // Character Sprite easter egg

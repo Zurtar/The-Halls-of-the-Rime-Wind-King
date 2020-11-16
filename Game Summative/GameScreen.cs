@@ -13,7 +13,6 @@ namespace Game_Summative
 {
     public partial class GameScreen : UserControl
     {
-
         #region initialization
 
         // Creating the character and corresponding rectangle, and starting position of the character.
@@ -32,38 +31,24 @@ namespace Game_Summative
         SolidBrush gridLineBrush = new SolidBrush(Color.Black);
         SolidBrush gridSpaceBrush = new SolidBrush(Color.MidnightBlue);
 
-        // Image Initialization
-        /*
-        Image characterSprite1 = Properties.Resources.Cobalt1;
-        Image characterSprite2 = Properties.Resources.Cobalt2;
-        Image characterSprite3 = Properties.Resources.Cobalt1;
-        Image characterSprite4 = Properties.Resources.Cobalt2;
-        Image characterSprite5 = Properties.Resources.Cobalt1;
-        Image characterSprite6 = Properties.Resources.Cobalt2;
-        Image characterSprite7 = Properties.Resources.Cobalt1;
-        Image characterSprite8 = Properties.Resources.Cobalt2;
-        Image characterSprite9 = Properties.Resources.Cobalt1;
-        Image characterSprite10 = Properties.Resources.Cobalt2;
-        Image characterSprite11 = Properties.Resources.Cobalt1;
-        Image characterSprite12 = Properties.Resources.Cobalt2;
-        */
-
+        // Character sprite initialization
         String characterType;
         Image characterSprite1;
         Image characterSprite2;
-        
-        Image enemyOne1 = Properties.Resources.Shambles_Sprite1;
+
+        // Obstacle sprite initialization
+        Image enemyOne1 = Properties.Resources.Shambles_Sprite1; // Shambles 
         Image enemyOne2 = Properties.Resources.Shambles_Sprite2;
-        Image enemyTwo1 = Properties.Resources.Skulk_Sprite1;
+        Image enemyTwo1 = Properties.Resources.Skulk_Sprite1; // Skulk
         Image enemyTwo2 = Properties.Resources.Skulk_Sprite2;
-        Image enemyThree1 = Properties.Resources.Puppeteer_Sprite1;
+        Image enemyThree1 = Properties.Resources.Puppeteer_Sprite1; // Puppeteer
         Image enemyThree2 = Properties.Resources.Puppeteer_Sprite2;
-        Image enemyFour1 = Properties.Resources.Screecher_Sprite1;
+        Image enemyFour1 = Properties.Resources.Screecher_Sprite1; // Screecher
         Image enemyFour2 = Properties.Resources.Screecher_Sprite2;
-        Image enemyFive1 = Properties.Resources.Mimic_Sprite1;
+        Image enemyFive1 = Properties.Resources.Mimic_Sprite1; // Mimic
         Image enemyFive2 = Properties.Resources.Mimic_Sprite2;
-        Image trapSprite = Properties.Resources.Trap_Sprite;
-        Image wallSprite = Properties.Resources.Wall_Sprite;
+        Image trapSprite = Properties.Resources.Trap_Sprite; // Trap
+        Image wallSprite = Properties.Resources.Wall_Sprite; // Wall
 
         // Idle animation toggle
         int idleMode = 1;
@@ -73,6 +58,8 @@ namespace Game_Summative
 
         // Sound Setup
         SoundPlayer buttonSound = new SoundPlayer(Properties.Resources.ButtonPress);
+        SoundPlayer collisionSound = new SoundPlayer(Properties.Resources.CollisionBap);
+        SoundPlayer deathSound = new SoundPlayer(Properties.Resources.DeathSound);
 
         // Grid Setup
         float gridSize, squareSize, lineSize, charSize;
@@ -100,9 +87,10 @@ namespace Game_Summative
         public GameScreen()
         {
             InitializeComponent();
+            // Hiding Cursor
+            Cursor.Hide();
 
             //Resetting the move count
-
             Form1.moves = 0;
 
             // setting the size of the grid, grid squares, and the lines.
@@ -158,6 +146,7 @@ namespace Game_Summative
             // Detection for Joystick or buttons down
             switch (e.KeyCode)
             {
+                // Keyboard movement
                 case Keys.W:
                     upDown = true;
                     reloaded = false;
@@ -175,6 +164,7 @@ namespace Game_Summative
                     reloaded = false;
                     break;
 
+                // Arcade movement
                 case Keys.B:
                     upDown = true;
                     reloaded = false;
@@ -192,6 +182,7 @@ namespace Game_Summative
                     reloaded = false;
                     break;
 
+                // Reset
                 case Keys.R:
                     resetdown = true;
                     break;
@@ -206,6 +197,11 @@ namespace Game_Summative
                     break;
                 case Keys.Left:
                     resetdown = true;
+                    break;
+
+                // Pause
+                case Keys.Escape:
+                    pauseDown = true;
                     break;
             }
 
@@ -217,6 +213,7 @@ namespace Game_Summative
             // Detection for Joystick or buttons down
             switch (e.KeyCode)
             {
+                // Keyboard movement
                 case Keys.W:
                     upDown = false;
                     keyPress = false;
@@ -234,6 +231,7 @@ namespace Game_Summative
                     keyPress = false;
                     break;
 
+                // Arcade movement
                 case Keys.B:
                     upDown = false;
                     keyPress = false;
@@ -251,6 +249,7 @@ namespace Game_Summative
                     keyPress = false;
                     break;
 
+                // Reset
                 case Keys.R:
                     resetdown = false;
                     keyPress = false;
@@ -267,12 +266,36 @@ namespace Game_Summative
                 case Keys.Left:
                     resetdown = false;
                     break;
+
+                // Pause
+                case Keys.Escape:
+                    pauseDown = true;
+                    break;
             }
             // Detection for menu buttons up
         }
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
+            // Pause menu reset function
+            if (Form1.pauseReset == true)
+            {
+                levelReset();
+                Form1.pauseReset = false;
+            }
+            // Pause menu main menu function
+            if (Form1.pauseMenu == true)
+            {
+                Form1.pauseMenu = false;
+
+                Form f = this.FindForm();
+                f.Controls.Remove(this);
+                MainMenu mm = new MainMenu();
+                mm.Location = new Point((Form1.screenWidth - mm.Width) / 2, (Form1.screenHeight - mm.Height) / 2);
+                f.Controls.Add(mm);
+                mm.Focus();
+            }
+
             idleMode++;
 
             if (idleMode == 15)
@@ -319,7 +342,6 @@ namespace Game_Summative
 
             if (movingUp == true)
             {
-
                 movingRight = false;
                 movingDown = false;
                 movingLeft = false;
@@ -329,66 +351,41 @@ namespace Game_Summative
                 if (knight.posY == 1)
                 {
                     movingUp = false;
+                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].walled == true)
                 {
                     movingUp = false;
+                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].trapped == true)
                 {
                     movingUp = false;
-                    dead = true;
-                    buttonSound.Play();
-                    buttonSound.Play();
-                    buttonSound.Play();
-                    loadLevel(currentLevel);
-                    dead = false;
-                    reloaded = true;
+                    deathMethod();
                 }
                 else if (grid[gridIndex].guarded == true)
                 {
                     movingUp = false;
+                    collisionSound.Play();
 
-                    // Enemy Action lists
-
-                    //search the list of enemies for an enemy at that grid position and then run the code for moving that enemy.
-
-                    int enemyIndex = enemy.FindIndex(x => (x.xPos == knight.posX) && (x.yPos == knight.posY - 1)); // Finding Enemy Position
-                    int enemyX = enemy[enemyIndex].xPos; // Tracking X Position
-                    int enemyY = enemy[enemyIndex].yPos; // Tracking Y Position
-
-                    if (grid[gridIndex].yPos != 1) // checking if enemy is at the side of the map
+                    if (knight.posY == 2)
                     {
-                        // Finding the grid space that the enemy is pushed into
-                        gridIndex = grid.FindIndex(x => (x.xPos == enemy[enemyIndex].xPos) && (x.yPos == enemy[enemyIndex].yPos - 1));
-
-                        // If the grid behind the enemy is walled or contains another enemy, It dosen't move.
-                        if (grid[gridIndex].walled == true || grid[gridIndex].guarded == true)
-                        {
-
-                        }
-                        // If the grid is trapped behind the enemy it dies
-                        else if (grid[gridIndex].trapped == true)
-                        {
-                            enemy.RemoveAt(enemyIndex);
-                            gridIndex = grid.FindIndex(x => (x.xPos == enemyX) && (x.yPos == enemyY));
-                            grid[gridIndex].guarded = false;
-                            buttonSound.Play();
-                        }
-                        else
-                        { // Otherwise they are pushed into the space behind them
-
-                            enemy[enemyIndex].yPos = enemy[enemyIndex].yPos - 1;
-                            enemy[enemyIndex].x = grid[gridIndex].charScreenX;
-                            enemy[enemyIndex].y = grid[gridIndex].charScreenY;
-
-                            grid[gridIndex].guarded = true;
-                            gridIndex = grid.FindIndex(x => (x.xPos == enemyX) && (x.yPos == enemyY));
-                            grid[gridIndex].guarded = false;
-                        }
-
+                        collisionSound.Play();
                     }
+                    else
+                    {
+                        // Enemy Action lists
 
+                        //search the list of enemies for an enemy at that grid position and then run the code for moving that enemy.
+
+                        int enemyIndex = enemy.FindIndex(x => (x.xPos == knight.posX) && (x.yPos == knight.posY - 1)); // Finding Enemy Position
+                        int enemyX = enemy[enemyIndex].xPos; // Tracking X Position
+                        int enemyY = enemy[enemyIndex].yPos; // Tracking Y Position
+                        int gridOld = grid.FindIndex(x => (x.xPos == knight.posX) && (x.yPos == knight.posY - 1));
+                        int gridNew = grid.FindIndex(x => (x.xPos == knight.posX) && (x.yPos == knight.posY - 2));
+
+                        enemyCollide(enemyIndex, gridOld, gridNew);
+                    }
                 }
                 else
                 {
@@ -398,7 +395,6 @@ namespace Game_Summative
                     int newY = grid[gridIndex].yPos;
 
                     knight.moveChar(newPosX, newPosY, newX, newY);
-
                 }
             }
 
@@ -418,21 +414,17 @@ namespace Game_Summative
                 if (knight.posX == 7)
                 {
                     movingRight = false;
+                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].walled == true)
                 {
                     movingRight = false;
+                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].trapped == true)
                 {
                     movingRight = false;
-                    dead = true;
-                    buttonSound.Play();
-                    buttonSound.Play();
-                    buttonSound.Play();
-                    loadLevel(currentLevel);
-                    dead = false;
-                    reloaded = true;
+                    deathMethod();
                 }
                 else if (grid[gridIndex].guarded == true)
                 {
@@ -441,41 +433,19 @@ namespace Game_Summative
                     // Enemy Action lists
 
                     //search the list of enemies for an enemy at that grid position and then run the code for moving that enemy.
-
-                    int enemyIndex = enemy.FindIndex(x => (x.xPos == knight.posX + 1) && (x.yPos == knight.posY)); // Finding Enemy Position
-                    int enemyX = enemy[enemyIndex].xPos; // Tracking X Position
-                    int enemyY = enemy[enemyIndex].yPos; // Tracking Y Position
-
-                    if (grid[gridIndex].xPos != 7) // checking if enemy is at the side of the map
+                    if (knight.posX == 6)
                     {
-                        // Finding the grid space that the enemy is pushed into
-                        gridIndex = grid.FindIndex(x => (x.xPos == enemy[enemyIndex].xPos + 1) && (x.yPos == enemy[enemyIndex].yPos));
+                        collisionSound.Play();
+                    }
+                    else
+                    {
+                        int enemyIndex = enemy.FindIndex(x => (x.xPos == knight.posX + 1) && (x.yPos == knight.posY)); // Finding Enemy Position
+                        int enemyX = enemy[enemyIndex].xPos; // Tracking X Position
+                        int enemyY = enemy[enemyIndex].yPos; // Tracking Y Position
+                        int gridOld = grid.FindIndex(x => (x.xPos == knight.posX + 1) && (x.yPos == knight.posY));
+                        int gridNew = grid.FindIndex(x => (x.xPos == knight.posX + 2) && (x.yPos == knight.posY));
 
-                        // If the grid behind the enemy is walled or contains another enemy, It dosen't move.
-                        if (grid[gridIndex].walled == true || grid[gridIndex].guarded == true)
-                        {
-
-                        }
-                        // If the grid is trapped behind the enemy it dies
-                        else if (grid[gridIndex].trapped == true)
-                        {
-                            enemy.RemoveAt(enemyIndex);
-                            gridIndex = grid.FindIndex(x => (x.xPos == enemyX) && (x.yPos == enemyY));
-                            grid[gridIndex].guarded = false;
-                            buttonSound.Play();
-                        }
-                        else
-                        { // Otherwise they are pushed into the space behind them
-
-                            enemy[enemyIndex].xPos = enemy[enemyIndex].xPos + 1;
-                            enemy[enemyIndex].x = grid[gridIndex].charScreenX;
-                            enemy[enemyIndex].y = grid[gridIndex].charScreenY;
-
-                            grid[gridIndex].guarded = true;
-                            gridIndex = grid.FindIndex(x => (x.xPos == enemyX) && (x.yPos == enemyY));
-                            grid[gridIndex].guarded = false;
-                        }
-
+                        enemyCollide(enemyIndex, gridOld, gridNew);
                     }
                 }
                 else
@@ -496,7 +466,6 @@ namespace Game_Summative
 
             if (movingDown == true)
             {
-
                 movingUp = false;
                 movingRight = false;
                 movingLeft = false;
@@ -506,21 +475,17 @@ namespace Game_Summative
                 if (knight.posY == 7)
                 {
                     movingDown = false;
+                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].walled == true)
                 {
                     movingDown = false;
+                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].trapped == true)
                 {
                     movingDown = false;
-                    dead = true;
-                    buttonSound.Play();
-                    buttonSound.Play();
-                    buttonSound.Play();
-                    loadLevel(currentLevel);
-                    dead = false;
-                    reloaded = true;
+                    deathMethod();
                 }
                 else if (grid[gridIndex].guarded == true)
                 {
@@ -530,40 +495,19 @@ namespace Game_Summative
 
                     //search the list of enemies for an enemy at that grid position and then run the code for moving that enemy.
 
-                    int enemyIndex = enemy.FindIndex(x => (x.xPos == knight.posX) && (x.yPos == knight.posY + 1)); // Finding Enemy Position
-                    int enemyX = enemy[enemyIndex].xPos; // Tracking X Position
-                    int enemyY = enemy[enemyIndex].yPos; // Tracking Y Position
-
-                    if (grid[gridIndex].yPos != 7) // checking if enemy is at the side of the map
+                    if (knight.posY == 6)
                     {
-                        // Finding the grid space that the enemy is pushed into
-                        gridIndex = grid.FindIndex(x => (x.xPos == enemy[enemyIndex].xPos) && (x.yPos == enemy[enemyIndex].yPos + 1));
+                        collisionSound.Play();
+                    }
+                    else
+                    {
+                        int enemyIndex = enemy.FindIndex(x => (x.xPos == knight.posX) && (x.yPos == knight.posY + 1)); // Finding Enemy Position
+                        int enemyX = enemy[enemyIndex].xPos; // Tracking X Position
+                        int enemyY = enemy[enemyIndex].yPos; // Tracking Y Position
+                        int gridOld = grid.FindIndex(x => (x.xPos == knight.posX) && (x.yPos == knight.posY + 1));
+                        int gridNew = grid.FindIndex(x => (x.xPos == knight.posX) && (x.yPos == knight.posY + 2));
 
-                        // If the grid behind the enemy is walled or contains another enemy, It dosen't move.
-                        if (grid[gridIndex].walled == true || grid[gridIndex].guarded == true)
-                        {
-
-                        }
-                        // If the grid is trapped behind the enemy it dies
-                        else if (grid[gridIndex].trapped == true)
-                        {
-                            enemy.RemoveAt(enemyIndex);
-                            gridIndex = grid.FindIndex(x => (x.xPos == enemyX) && (x.yPos == enemyY));
-                            grid[gridIndex].guarded = false;
-                            buttonSound.Play();
-                        }
-                        else
-                        { // Otherwise they are pushed into the space behind them
-
-                            enemy[enemyIndex].yPos = enemy[enemyIndex].yPos + 1;
-                            enemy[enemyIndex].x = grid[gridIndex].charScreenX;
-                            enemy[enemyIndex].y = grid[gridIndex].charScreenY;
-
-                            grid[gridIndex].guarded = true;
-                            gridIndex = grid.FindIndex(x => (x.xPos == enemyX) && (x.yPos == enemyY));
-                            grid[gridIndex].guarded = false;
-                        }
-
+                        enemyCollide(enemyIndex, gridOld, gridNew);
                     }
                 }
                 else
@@ -594,21 +538,17 @@ namespace Game_Summative
                 if (knight.posX == 1)
                 {
                     movingLeft = false;
+                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].walled == true)
                 {
                     movingLeft = false;
+                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].trapped == true)
                 {
                     movingLeft = false;
-                    dead = true;
-                    buttonSound.Play();
-                    buttonSound.Play();
-                    buttonSound.Play();
-                    loadLevel(currentLevel);
-                    dead = false;
-                    reloaded = true;
+                    deathMethod();
                 }
                 else if (grid[gridIndex].guarded == true)
                 {
@@ -618,40 +558,19 @@ namespace Game_Summative
 
                     //search the list of enemies for an enemy at that grid position and then run the code for moving that enemy.
 
-                    int enemyIndex = enemy.FindIndex(x => (x.xPos == knight.posX - 1) && (x.yPos == knight.posY)); // Finding Enemy Position
-                    int enemyX = enemy[enemyIndex].xPos; // Tracking X Position
-                    int enemyY = enemy[enemyIndex].yPos; // Tracking Y Position
-
-                    if (grid[gridIndex].xPos != 1) // checking if enemy is at the side of the map
+                    if (knight.posX == 2)
                     {
-                        // Finding the grid space that the enemy is pushed into
-                        gridIndex = grid.FindIndex(x => (x.xPos == enemy[enemyIndex].xPos - 1) && (x.yPos == enemy[enemyIndex].yPos));
+                        collisionSound.Play();
+                    }
+                    else
+                    {
+                        int enemyIndex = enemy.FindIndex(x => (x.xPos == knight.posX - 1) && (x.yPos == knight.posY)); // Finding Enemy Position
+                        int enemyX = enemy[enemyIndex].xPos; // Tracking X Position
+                        int enemyY = enemy[enemyIndex].yPos; // Tracking Y Position
+                        int gridOld = grid.FindIndex(x => (x.xPos == knight.posX - 1) && (x.yPos == knight.posY));
+                        int gridNew = grid.FindIndex(x => (x.xPos == knight.posX - 2) && (x.yPos == knight.posY));
 
-                        // If the grid behind the enemy is walled or contains another enemy, It dosen't move.
-                        if (grid[gridIndex].walled == true || grid[gridIndex].guarded == true)
-                        {
-
-                        }
-                        // If the grid is trapped behind the enemy it dies
-                        else if (grid[gridIndex].trapped == true)
-                        {
-                            enemy.RemoveAt(enemyIndex);
-                            gridIndex = grid.FindIndex(x => (x.xPos == enemyX) && (x.yPos == enemyY));
-                            grid[gridIndex].guarded = false;
-                            buttonSound.Play();
-                        }
-                        else
-                        { // Otherwise they are pushed into the space behind them
-
-                            enemy[enemyIndex].xPos = enemy[enemyIndex].xPos - 1;
-                            enemy[enemyIndex].x = grid[gridIndex].charScreenX;
-                            enemy[enemyIndex].y = grid[gridIndex].charScreenY;
-
-                            grid[gridIndex].guarded = true;
-                            gridIndex = grid.FindIndex(x => (x.xPos == enemyX) && (x.yPos == enemyY));
-                            grid[gridIndex].guarded = false;
-                        }
-
+                        enemyCollide(enemyIndex, gridOld, gridNew);
                     }
                 }
                 else
@@ -688,18 +607,33 @@ namespace Game_Summative
                     f.Controls.Add(vs);
                     vs.Focus();
                 }
-            
+
                 loadLevel(currentLevel);
 
             }
 
             if (resetdown == true && keyPress == false && reloaded == false)
             {
+                levelReset();
+            }
+
+            // Pause Menu
+            if (pauseDown == true && keyPress == false && reloaded == false)
+            {
+                pauseDown = false;
                 buttonSound.Play();
-                loadLevel(currentLevel);
-                dead = false;
                 reloaded = true;
-                levelMoves = 0;
+
+                Form f = this.FindForm();
+                //f.Controls.Remove(this);
+                PauseMenu pm = new PauseMenu();
+                int screenX = (Form1.screenWidth - pm.Width) / 2;
+                int screenY = (Form1.screenHeight - pm.Height) / 2;
+                pm.Location = new Point(screenX, screenY);
+                f.Controls.Add(pm);
+                pm.Focus();
+                pm.BringToFront();
+
             }
 
             Refresh();
@@ -802,6 +736,15 @@ namespace Game_Summative
             }
         }
 
+        public void levelReset()
+        {
+            buttonSound.Play();
+            loadLevel(currentLevel);
+            dead = false;
+            reloaded = true;
+            levelMoves = 0;
+        }
+
         private void loadLevel(int level)
         {
             Bitmap myBitmap;
@@ -873,6 +816,47 @@ namespace Game_Summative
             {
                 // Boss fight room
             }
+
+        }
+
+        public void enemyCollide(int enemyPos, int oldPos, int newPos)
+        {
+            int enemyX = enemy[enemyPos].xPos; // Tracking X Position
+            int enemyY = enemy[enemyPos].yPos; // Tracking Y Position
+
+            // If the grid behind the enemy is walled or contains another enemy, It dosen't move.
+            if (grid[newPos].walled == true || grid[newPos].guarded == true)
+            {
+                //collisionSound.Play();
+            }
+            // If the grid is trapped behind the enemy it dies
+            else if (grid[newPos].trapped == true)
+            {
+                enemy.RemoveAt(enemyPos);
+                newPos = grid.FindIndex(x => (x.xPos == enemyX) && (x.yPos == enemyY));
+                grid[oldPos].guarded = false;
+                buttonSound.Play();
+            }
+            else
+            { // Otherwise they are pushed into the space behind them
+
+                enemy[enemyPos].xPos = grid[newPos].xPos;
+                enemy[enemyPos].yPos = grid[newPos].yPos;
+                enemy[enemyPos].x = grid[newPos].charScreenX;
+                enemy[enemyPos].y = grid[newPos].charScreenY;
+
+                grid[newPos].guarded = true;
+                grid[oldPos].guarded = false;
+            }
+        }
+
+        public void deathMethod() // Player Death Method
+        {
+            dead = true;
+            deathSound.Play();
+            loadLevel(currentLevel);
+            dead = false;
+            reloaded = true;
         }
     }
 }
