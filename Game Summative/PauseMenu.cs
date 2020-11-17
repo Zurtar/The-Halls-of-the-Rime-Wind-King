@@ -26,6 +26,7 @@ namespace Game_Summative
         {
             Form f = this.FindForm();
             f.Controls.Remove(this);
+            Cursor.Hide();
         }
 
         private void ResetButton_Click(object sender, EventArgs e)
@@ -33,6 +34,7 @@ namespace Game_Summative
             Form f = this.FindForm();
             f.Controls.Remove(this);
             Form1.pauseReset = true;
+            Cursor.Hide();
         }
 
         private void MainmenuButton_Click(object sender, EventArgs e)

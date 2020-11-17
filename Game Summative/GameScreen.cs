@@ -50,6 +50,26 @@ namespace Game_Summative
         Image trapSprite = Properties.Resources.Trap_Sprite; // Trap
         Image wallSprite = Properties.Resources.Wall_Sprite; // Wall
 
+        // Boss fight sprite initialization
+        Image lichOne1 = Properties.Resources.LichPhaseOne1;
+        Image lichOne2 = Properties.Resources.LichPhaseOne2;
+        Image lichTwo1 = Properties.Resources.LichPhaseTwo1;
+        Image lichTwo2 = Properties.Resources.LichPhaseTwo2;
+        Image lichThree1 = Properties.Resources.LichPhaseThree1;
+        Image lichThree2 = Properties.Resources.LichPhaseThree2;
+        Image lichFour1 = Properties.Resources.LichPhaseFour1;
+        Image lichFour2 = Properties.Resources.LichPhaseFour2;
+        Image lichFive1 = Properties.Resources.LichPhaseFive1;
+        Image lichFive2 = Properties.Resources.LichPhaseFive2;
+        Image lichSix1 = Properties.Resources.LichPhaseSix1;
+        Image lichSix2 = Properties.Resources.LichPhaseSix2;
+        Image sword1 = Properties.Resources.Sword_Sprite_1;
+        Image sword2 = Properties.Resources.Sword_Sprite_2;
+
+        // Boss fight variables
+
+        int bossPhase;
+
         // Idle animation toggle
         int idleMode = 1;
 
@@ -596,7 +616,7 @@ namespace Game_Summative
                 Form1.moves = Form1.moves + levelMoves;
                 levelMoves = 0;
                 currentLevel++;
-                if (currentLevel == 20) // 1+ the number of levels to loop level gameplay
+                if (currentLevel == 35) // 1+ the number of levels to loop level gameplay
                 {
                     // Loading the victory screen
                     Form f = this.FindForm();
@@ -623,6 +643,7 @@ namespace Game_Summative
                 pauseDown = false;
                 buttonSound.Play();
                 reloaded = true;
+                Cursor.Show();
 
                 Form f = this.FindForm();
                 //f.Controls.Remove(this);
@@ -788,11 +809,21 @@ namespace Game_Summative
                         }
                         else if (green > red && green > blue) // Enemy Placement
                         {
+                            int characterType;
+
+                            if (currentLevel >= 30)
+                            {
+                                characterType = 6;
+                            }
+                            else
+                            {
+                                characterType = randGen.Next(1, 6);
+                            }
 
                             gridIndex = grid.FindIndex(g => (g.xPos == x) && (g.yPos == y));
                             float enemyXPos = grid[gridIndex].charScreenX;
                             float enemyYPos = grid[gridIndex].charScreenY;
-                            Enemy newEnemy = new Enemy(x, y, charSize, enemyXPos, enemyYPos, randGen.Next(1, 6));
+                            Enemy newEnemy = new Enemy(x, y, charSize, enemyXPos, enemyYPos, characterType);
                             enemy.Add(newEnemy);
                             grid[gridIndex].guarded = true;
                         }
@@ -814,7 +845,7 @@ namespace Game_Summative
             }
             catch
             {
-                // Boss fight room
+                
             }
 
         }
