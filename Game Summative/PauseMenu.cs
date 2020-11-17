@@ -39,9 +39,9 @@ namespace Game_Summative
 
         private void MainmenuButton_Click(object sender, EventArgs e)
         {
+            Form1.pauseMenu = true;
             Form f = this.FindForm();
             f.Controls.Remove(this);
-            Form1.pauseMenu = true;
         }
     }
 }

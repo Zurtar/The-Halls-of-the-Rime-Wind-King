@@ -18,7 +18,8 @@ namespace Game_Summative
 
             InitializeComponent();
 
-            int score, eagle = 100, birdie = 110, par = 125, bogey = 140;
+            // Least possible moves is 700 (I think)
+            int score, eagle = 750, birdie = 1000, par = 1500, bogey = 3000;
 
             score = Form1.moves;
 

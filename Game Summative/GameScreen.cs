@@ -314,6 +314,7 @@ namespace Game_Summative
                 mm.Location = new Point((Form1.screenWidth - mm.Width) / 2, (Form1.screenHeight - mm.Height) / 2);
                 f.Controls.Add(mm);
                 mm.Focus();
+
             }
 
             idleMode++;
@@ -671,7 +672,66 @@ namespace Game_Summative
                 if (g.trapped == true) // Traps
                 {
                     e.Graphics.FillRectangle(gridSpaceBrush, g.screenX, g.screenY, g.squareSize, g.squareSize);
-                    e.Graphics.DrawImage(trapSprite, g.screenX, g.screenY, g.squareSize, g.squareSize);
+
+                    if (currentLevel <= 29)
+                    {
+                        e.Graphics.DrawImage(trapSprite, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                    }
+                    else if (currentLevel == 30)
+                    {
+                        if (idleMode >= 1)
+                        {
+                            e.Graphics.DrawImage(lichOne1, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                        }
+                        else
+                        {
+                            e.Graphics.DrawImage(lichOne2, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                        }
+                    }
+                    else if (currentLevel == 31)
+                    {
+                        if (idleMode >= 1)
+                        {
+                            e.Graphics.DrawImage(lichTwo1, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                        }
+                        else
+                        {
+                            e.Graphics.DrawImage(lichTwo2, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                        }
+                    }
+                    else if (currentLevel == 32)
+                    {
+                        if (idleMode >= 1)
+                        {
+                            e.Graphics.DrawImage(lichThree1, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                        }
+                        else
+                        {
+                            e.Graphics.DrawImage(lichThree2, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                        }
+                    }
+                    else if (currentLevel == 33)
+                    {
+                        if (idleMode >= 1)
+                        {
+                            e.Graphics.DrawImage(lichFour1, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                        }
+                        else
+                        {
+                            e.Graphics.DrawImage(lichFour2, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                        }
+                    }
+                    else if (currentLevel == 34)
+                    {
+                        if (idleMode >= 1)
+                        {
+                            e.Graphics.DrawImage(lichFive1, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                        }
+                        else
+                        {
+                            e.Graphics.DrawImage(lichFive2, g.screenX, g.screenY, g.squareSize, g.squareSize);
+                        }
+                    }
                 }
                 else if (g.walled == true) // Walls
                 {
@@ -689,28 +749,27 @@ namespace Game_Summative
                 {
                     if (n.type == 1)
                     {
-
                         e.Graphics.DrawImage(enemyOne1, n.x, n.y, n.enemySize, n.enemySize);
                     }
                     else if (n.type == 2)
                     {
-
                         e.Graphics.DrawImage(enemyTwo1, n.x, n.y, n.enemySize, n.enemySize);
                     }
                     else if (n.type == 3)
                     {
-
                         e.Graphics.DrawImage(enemyThree1, n.x, n.y, n.enemySize, n.enemySize);
                     }
                     else if (n.type == 4)
                     {
-
                         e.Graphics.DrawImage(enemyFour1, n.x, n.y, n.enemySize, n.enemySize);
                     }
-                    else
+                    else if (n.type == 5)
                     {
-
                         e.Graphics.DrawImage(enemyFive1, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                    else if (n.type == 6)
+                    {
+                        e.Graphics.DrawImage(sword1, n.x, n.y, n.enemySize, n.enemySize);
                     }
                 }
             }
@@ -720,28 +779,27 @@ namespace Game_Summative
                 {
                     if (n.type == 1)
                     {
-
                         e.Graphics.DrawImage(enemyOne2, n.x, n.y, n.enemySize, n.enemySize);
                     }
                     else if (n.type == 2)
                     {
-
                         e.Graphics.DrawImage(enemyTwo2, n.x, n.y, n.enemySize, n.enemySize);
                     }
                     else if (n.type == 3)
                     {
-
                         e.Graphics.DrawImage(enemyThree2, n.x, n.y, n.enemySize, n.enemySize);
                     }
                     else if (n.type == 4)
                     {
-
                         e.Graphics.DrawImage(enemyFour2, n.x, n.y, n.enemySize, n.enemySize);
                     }
-                    else
+                    else if (n.type == 5)
                     {
-
                         e.Graphics.DrawImage(enemyFive2, n.x, n.y, n.enemySize, n.enemySize);
+                    }
+                    else if (n.type == 6)
+                    {
+                        e.Graphics.DrawImage(sword2, n.x, n.y, n.enemySize, n.enemySize);
                     }
                 }
             }
@@ -759,6 +817,7 @@ namespace Game_Summative
 
         public void levelReset()
         {
+            levelMoves = 0;
             buttonSound.Play();
             loadLevel(currentLevel);
             dead = false;

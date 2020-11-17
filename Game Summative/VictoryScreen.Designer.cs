@@ -37,9 +37,10 @@
             // 
             // scoreOutput
             // 
-            this.scoreOutput.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.scoreOutput.BackColor = System.Drawing.Color.Black;
             this.scoreOutput.Font = new System.Drawing.Font("OCR A Extended", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.scoreOutput.Location = new System.Drawing.Point(0, 148);
+            this.scoreOutput.ForeColor = System.Drawing.Color.White;
+            this.scoreOutput.Location = new System.Drawing.Point(0, 163);
             this.scoreOutput.Name = "scoreOutput";
             this.scoreOutput.Size = new System.Drawing.Size(547, 23);
             this.scoreOutput.TabIndex = 0;
@@ -48,9 +49,10 @@
             // 
             // motivationOutput
             // 
-            this.motivationOutput.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.motivationOutput.BackColor = System.Drawing.Color.Black;
             this.motivationOutput.Font = new System.Drawing.Font("OCR A Extended", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.motivationOutput.Location = new System.Drawing.Point(0, 184);
+            this.motivationOutput.ForeColor = System.Drawing.Color.White;
+            this.motivationOutput.Location = new System.Drawing.Point(0, 199);
             this.motivationOutput.Name = "motivationOutput";
             this.motivationOutput.Size = new System.Drawing.Size(547, 23);
             this.motivationOutput.TabIndex = 1;
@@ -59,9 +61,10 @@
             // 
             // parOutput
             // 
-            this.parOutput.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.parOutput.BackColor = System.Drawing.Color.Black;
             this.parOutput.Font = new System.Drawing.Font("OCR A Extended", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.parOutput.Location = new System.Drawing.Point(0, 43);
+            this.parOutput.ForeColor = System.Drawing.Color.White;
+            this.parOutput.Location = new System.Drawing.Point(0, 50);
             this.parOutput.Name = "parOutput";
             this.parOutput.Size = new System.Drawing.Size(547, 86);
             this.parOutput.TabIndex = 2;
@@ -71,7 +74,7 @@
             // replayButton
             // 
             this.replayButton.Font = new System.Drawing.Font("OCR A Extended", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.replayButton.Location = new System.Drawing.Point(212, 223);
+            this.replayButton.Location = new System.Drawing.Point(213, 237);
             this.replayButton.Name = "replayButton";
             this.replayButton.Size = new System.Drawing.Size(127, 35);
             this.replayButton.TabIndex = 3;
@@ -82,7 +85,7 @@
             // MainMenuButton
             // 
             this.MainMenuButton.Font = new System.Drawing.Font("OCR A Extended", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MainMenuButton.Location = new System.Drawing.Point(212, 264);
+            this.MainMenuButton.Location = new System.Drawing.Point(214, 278);
             this.MainMenuButton.Name = "MainMenuButton";
             this.MainMenuButton.Size = new System.Drawing.Size(126, 35);
             this.MainMenuButton.TabIndex = 4;
@@ -94,7 +97,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.Controls.Add(this.MainMenuButton);
             this.Controls.Add(this.replayButton);
             this.Controls.Add(this.parOutput);

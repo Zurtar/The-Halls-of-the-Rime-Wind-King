@@ -443,10 +443,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="HOTRWKicon.ico" />
-    <None Include="Resources\level33.png">
+    <None Include="Resources\level34.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\level34.png">
+    <None Include="Resources\level33.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\level32.png">
