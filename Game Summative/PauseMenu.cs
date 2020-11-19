@@ -16,12 +16,13 @@ namespace Game_Summative
         {
             InitializeComponent();
         }
-
+         // Code for exiting game
         private void ExitButton_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.Application.Exit();
         }
 
+        // Code for resuming gameplay
         private void ResumeButton_Click(object sender, EventArgs e)
         {
             Form f = this.FindForm();
@@ -29,6 +30,7 @@ namespace Game_Summative
             Cursor.Hide();
         }
 
+        // Code for resetting the level
         private void ResetButton_Click(object sender, EventArgs e)
         {
             Form f = this.FindForm();
@@ -37,6 +39,7 @@ namespace Game_Summative
             Cursor.Hide();
         }
 
+        // Code for returning to the main menu
         private void MainmenuButton_Click(object sender, EventArgs e)
         {
             Form1.pauseMenu = true;

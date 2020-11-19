@@ -23,7 +23,9 @@ namespace Game_Summative
             Form f = this.FindForm();
             f.Controls.Remove(this);
             GameScreen gs = new GameScreen();
-            
+            Form1.pauseReset = false;
+            Form1.pauseMenu = false;
+
             gs.Size = new Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
             int screenX = (Form1.screenWidth - gs.Width) / 2;
             int screenY = (Form1.screenHeight - gs.Height) / 2;
@@ -33,6 +35,7 @@ namespace Game_Summative
             gs.Focus();
         }
 
+        // Opening the settings menu
         private void SettingsButton_Click(object sender, EventArgs e)
         {
             Form f = this.FindForm();

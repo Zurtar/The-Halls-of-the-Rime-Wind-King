@@ -30,6 +30,9 @@ namespace Game_Summative
         // Set up the black and white brushes for colouring the grid in.
         SolidBrush gridLineBrush = new SolidBrush(Color.Black);
         SolidBrush gridSpaceBrush = new SolidBrush(Color.MidnightBlue);
+        SolidBrush textBrush = new SolidBrush(Color.White);
+
+        Font textFont = new Font("OCRA", 16, FontStyle.Regular, GraphicsUnit.Pixel);
 
         // Character sprite initialization
         String characterType;
@@ -66,10 +69,6 @@ namespace Game_Summative
         Image sword1 = Properties.Resources.Sword_Sprite_1;
         Image sword2 = Properties.Resources.Sword_Sprite_2;
 
-        // Boss fight variables
-
-        int bossPhase;
-
         // Idle animation toggle
         int idleMode = 1;
 
@@ -78,7 +77,6 @@ namespace Game_Summative
 
         // Sound Setup
         SoundPlayer buttonSound = new SoundPlayer(Properties.Resources.ButtonPress);
-        SoundPlayer collisionSound = new SoundPlayer(Properties.Resources.CollisionBap);
         SoundPlayer deathSound = new SoundPlayer(Properties.Resources.DeathSound);
 
         // Grid Setup
@@ -205,23 +203,29 @@ namespace Game_Summative
                 // Reset
                 case Keys.R:
                     resetdown = true;
+                    reloaded = false;
                     break;
                 case Keys.Up:
                     resetdown = true;
+                    reloaded = false;
                     break;
                 case Keys.Right:
                     resetdown = true;
+                    reloaded = false;
                     break;
                 case Keys.Down:
                     resetdown = true;
+                    reloaded = false;
                     break;
                 case Keys.Left:
                     resetdown = true;
+                    reloaded = false;
                     break;
 
                 // Pause
                 case Keys.Escape:
                     pauseDown = true;
+                    reloaded = false;
                     break;
             }
 
@@ -302,11 +306,13 @@ namespace Game_Summative
             {
                 levelReset();
                 Form1.pauseReset = false;
+                Form1.pauseMenu = false;
             }
             // Pause menu main menu function
             if (Form1.pauseMenu == true)
             {
                 Form1.pauseMenu = false;
+                Form1.pauseReset = false;
 
                 Form f = this.FindForm();
                 f.Controls.Remove(this);
@@ -314,11 +320,12 @@ namespace Game_Summative
                 mm.Location = new Point((Form1.screenWidth - mm.Width) / 2, (Form1.screenHeight - mm.Height) / 2);
                 f.Controls.Add(mm);
                 mm.Focus();
+                mainTimer.Enabled = false;
 
             }
 
+            // Idle animation counter
             idleMode++;
-
             if (idleMode == 15)
             {
                 idleMode = -15;
@@ -337,28 +344,29 @@ namespace Game_Summative
                 {
                     movingUp = true;
                     keyPress = true;
-                    Form1.moves++;
+                    levelMoves++;
                 }
                 if (rightDown == true && knight.posX != 7) // Character right movement lock
                 {
                     movingRight = true;
                     keyPress = true;
-                    Form1.moves++;
+                    levelMoves++;
                 }
                 if (downDown == true && knight.posY != 7) // Character downwards movement lock
                 {
                     movingDown = true;
                     keyPress = true;
-                    Form1.moves++;
+                    levelMoves++;
                 }
                 if (leftDown == true && knight.posX != 1) // Character left movement lock
                 {
                     movingLeft = true;
                     keyPress = true;
-                    Form1.moves++;
+                    levelMoves++;
                 }
             }
 
+            // Each region represents the logic for sliding in a direction
             #region Moving Up
 
             if (movingUp == true)
@@ -372,12 +380,10 @@ namespace Game_Summative
                 if (knight.posY == 1)
                 {
                     movingUp = false;
-                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].walled == true)
                 {
                     movingUp = false;
-                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].trapped == true)
                 {
@@ -387,11 +393,9 @@ namespace Game_Summative
                 else if (grid[gridIndex].guarded == true)
                 {
                     movingUp = false;
-                    collisionSound.Play();
 
                     if (knight.posY == 2)
                     {
-                        collisionSound.Play();
                     }
                     else
                     {
@@ -435,12 +439,10 @@ namespace Game_Summative
                 if (knight.posX == 7)
                 {
                     movingRight = false;
-                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].walled == true)
                 {
                     movingRight = false;
-                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].trapped == true)
                 {
@@ -456,7 +458,7 @@ namespace Game_Summative
                     //search the list of enemies for an enemy at that grid position and then run the code for moving that enemy.
                     if (knight.posX == 6)
                     {
-                        collisionSound.Play();
+
                     }
                     else
                     {
@@ -496,12 +498,10 @@ namespace Game_Summative
                 if (knight.posY == 7)
                 {
                     movingDown = false;
-                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].walled == true)
                 {
                     movingDown = false;
-                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].trapped == true)
                 {
@@ -518,7 +518,6 @@ namespace Game_Summative
 
                     if (knight.posY == 6)
                     {
-                        collisionSound.Play();
                     }
                     else
                     {
@@ -559,12 +558,10 @@ namespace Game_Summative
                 if (knight.posX == 1)
                 {
                     movingLeft = false;
-                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].walled == true)
                 {
                     movingLeft = false;
-                    collisionSound.Play();
                 }
                 else if (grid[gridIndex].trapped == true)
                 {
@@ -581,7 +578,6 @@ namespace Game_Summative
 
                     if (knight.posX == 2)
                     {
-                        collisionSound.Play();
                     }
                     else
                     {
@@ -609,7 +605,6 @@ namespace Game_Summative
             #endregion
 
             // Checking for cleared level
-
             List<Grid> levelWinCheck = grid.FindAll(x => x.guarded == true);
 
             if (levelWinCheck.Count() == 0) // Level Loader
@@ -633,6 +628,7 @@ namespace Game_Summative
 
             }
 
+            // Checking for resetting the level
             if (resetdown == true && keyPress == false && reloaded == false)
             {
                 levelReset();
@@ -664,8 +660,10 @@ namespace Game_Summative
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
             // Setting the background grid background
-            e.Graphics.FillRectangle(gridLineBrush, ((this.Width - gridSize) / 2), ((this.Height - gridSize) / 2), gridSize, gridSize);
+            float gridX = ((this.Width - gridSize) / 2);
+            float gridY = ((this.Height - gridSize) / 2);
 
+            e.Graphics.FillRectangle(gridLineBrush, gridX, gridY, gridSize, gridSize);
             // Colouring each grid space
             foreach (Grid g in grid)
             {
@@ -677,7 +675,7 @@ namespace Game_Summative
                     {
                         e.Graphics.DrawImage(trapSprite, g.screenX, g.screenY, g.squareSize, g.squareSize);
                     }
-                    else if (currentLevel == 30)
+                    else if (currentLevel == 30) // Lich sprites for final boss levels
                     {
                         if (idleMode >= 1)
                         {
@@ -745,7 +743,7 @@ namespace Game_Summative
 
             if (idleMode >= 1)
             {
-                foreach (Enemy n in enemy) // Enemies
+                foreach (Enemy n in enemy) // Enemy sprites
                 {
                     if (n.type == 1)
                     {
@@ -767,7 +765,7 @@ namespace Game_Summative
                     {
                         e.Graphics.DrawImage(enemyFive1, n.x, n.y, n.enemySize, n.enemySize);
                     }
-                    else if (n.type == 6)
+                    else if (n.type == 6) // Sword for boss levels
                     {
                         e.Graphics.DrawImage(sword1, n.x, n.y, n.enemySize, n.enemySize);
                     }
@@ -775,7 +773,7 @@ namespace Game_Summative
             }
             else
             {
-                foreach (Enemy n in enemy) // Enemies
+                foreach (Enemy n in enemy) // second frame of animation for enemy sprites
                 {
                     if (n.type == 1)
                     {
@@ -813,6 +811,9 @@ namespace Game_Summative
             {
                 e.Graphics.DrawImage(characterSprite2, knightBox);
             }
+
+            e.Graphics.DrawString("level " + currentLevel.ToString(), textFont, textBrush, gridX + gridSize / 50, gridY + gridSize + gridSize / 50);
+            e.Graphics.DrawString("Moves: " + levelMoves.ToString(), textFont, textBrush, gridX + gridSize - gridSize / 7, gridY + gridSize + gridSize / 50);
         }
 
         public void levelReset()
@@ -871,14 +872,15 @@ namespace Game_Summative
                             int characterType;
 
                             if (currentLevel >= 30)
-                            {
-                                characterType = 6;
+                            { // Code for boss fight sword
+                                characterType = 6; 
                             }
                             else
-                            {
+                            { // Code for random character types
                                 characterType = randGen.Next(1, 6);
                             }
 
+                            // Placing enemies on grid
                             gridIndex = grid.FindIndex(g => (g.xPos == x) && (g.yPos == y));
                             float enemyXPos = grid[gridIndex].charScreenX;
                             float enemyYPos = grid[gridIndex].charScreenY;
@@ -917,7 +919,6 @@ namespace Game_Summative
             // If the grid behind the enemy is walled or contains another enemy, It dosen't move.
             if (grid[newPos].walled == true || grid[newPos].guarded == true)
             {
-                //collisionSound.Play();
             }
             // If the grid is trapped behind the enemy it dies
             else if (grid[newPos].trapped == true)
@@ -942,6 +943,8 @@ namespace Game_Summative
 
         public void deathMethod() // Player Death Method
         {
+            // Main reset code
+            levelMoves = 0;
             dead = true;
             deathSound.Play();
             loadLevel(currentLevel);
