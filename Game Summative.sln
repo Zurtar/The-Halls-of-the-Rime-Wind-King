@@ -5,16 +5,24 @@ VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game Summative", "Game Summative\Game Summative.csproj", "{50009E19-3D81-45F4-AD75-DAB01A618F48}"
 EndProject
+Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "Halls of the Rime Wind King", "Halls of the Rime Wind King\Halls of the Rime Wind King.aiproj", "{994BE425-A824-42A8-B0BF-16C072BAE304}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		All|Any CPU = All|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50009E19-3D81-45F4-AD75-DAB01A618F48}.All|Any CPU.ActiveCfg = Release|Any CPU
+		{50009E19-3D81-45F4-AD75-DAB01A618F48}.All|Any CPU.Build.0 = Release|Any CPU
 		{50009E19-3D81-45F4-AD75-DAB01A618F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{50009E19-3D81-45F4-AD75-DAB01A618F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50009E19-3D81-45F4-AD75-DAB01A618F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50009E19-3D81-45F4-AD75-DAB01A618F48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{994BE425-A824-42A8-B0BF-16C072BAE304}.All|Any CPU.ActiveCfg = DefaultBuild
+		{994BE425-A824-42A8-B0BF-16C072BAE304}.Debug|Any CPU.ActiveCfg = DefaultBuild
+		{994BE425-A824-42A8-B0BF-16C072BAE304}.Release|Any CPU.ActiveCfg = DefaultBuild
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
