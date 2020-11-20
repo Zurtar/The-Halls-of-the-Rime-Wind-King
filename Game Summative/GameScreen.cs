@@ -339,42 +339,35 @@ namespace Game_Summative
 
 			if (movingUp == false && movingRight == false && movingDown == false && movingLeft == false && keyPress == false && dead == false)
 			{
-				Bot.possibleMoveDirections.Clear();
-
 				// Tracking the number of moves for scoring
 
 				// knight.x = knight.x + 1; // Test for movement fuctionality.
 				if (upDown == true && knight.posY != 1) // Character upwards movement lock
 				{
-					Bot.possibleMoveDirections.Add(1);
 					movingUp = true;
 					keyPress = true;
 					levelMoves++;
 				}
 				if (rightDown == true && knight.posX != 7) // Character right movement lock
 				{
-					Bot.possibleMoveDirections.Add(2);
 					movingRight = true;
 					keyPress = true;
 					levelMoves++;
 				}
 				if (downDown == true && knight.posY != 7) // Character downwards movement lock
 				{
-					Bot.possibleMoveDirections.Add(3);
 					movingDown = true;
 					keyPress = true;
 					levelMoves++;
 				}
 				if (leftDown == true && knight.posX != 1) // Character left movement lock
 				{
-					Bot.possibleMoveDirections.Add(0);
 					movingLeft = true;
 					keyPress = true;
 					levelMoves++;
 				}
 			}
 
-			Bot.tickMove();
 
 			// Each region represents the logic for sliding in a direction
 			#region Moving Up
@@ -688,168 +681,106 @@ namespace Game_Summative
 				{
 					e.Graphics.FillRectangle(gridSpaceBrush, g.screenX, g.screenY, g.squareSize, g.squareSize);
 
-                    if (currentLevel <= 29)
-                    {
-                        e.Graphics.DrawImage(trapSprite, g.screenX, g.screenY, g.squareSize, g.squareSize);
-                    }
-                    else
-                    {
-                        Image lichFrameOne = null, lichFrameTwo = null;
-                        switch (currentLevel)
-                        {
-                            case 30:
-                                lichFrameOne = lichOne1;
-                                lichFrameTwo = lichOne2;
-                                break;
-                            case 31:
-                                lichFrameOne = lichTwo1;
-                                lichFrameTwo = lichTwo2;
-                                break;
-                            case 32:
-                                lichFrameOne = lichThree1;
-                                lichFrameTwo = lichThree2; 
-                                break;
-                            case 33:
-                                lichFrameOne = lichFour1;
-                                lichFrameTwo = lichFour2; 
-                                break;
-                            case 34:
-                                lichFrameOne = lichFive1;
-                                lichFrameTwo = lichFive2;
-                                break;
-                        }
-                        if (idleMode >= 1)
-                        {
-                            e.Graphics.DrawImage(lichFrameOne, g.screenX, g.screenY, g.squareSize, g.squareSize);
-                        }
-                        else
-                        {
-                            e.Graphics.DrawImage(lichFrameTwo, g.screenX, g.screenY, g.squareSize, g.squareSize);
-                        }
-                    }
-                }
+					if (currentLevel <= 29)
+					{
+						e.Graphics.DrawImage(trapSprite, g.screenX, g.screenY, g.squareSize, g.squareSize);
+					}
+					else
+					{
+						Image lichFrameOne = null, lichFrameTwo = null;
+						switch (currentLevel)
+						{
+							case 30:
+								lichFrameOne = lichOne1;
+								lichFrameTwo = lichOne2;
+								break;
+							case 31:
+								lichFrameOne = lichTwo1;
+								lichFrameTwo = lichTwo2;
+								break;
+							case 32:
+								lichFrameOne = lichThree1;
+								lichFrameTwo = lichThree2;
+								break;
+							case 33:
+								lichFrameOne = lichFour1;
+								lichFrameTwo = lichFour2;
+								break;
+							case 34:
+								lichFrameOne = lichFive1;
+								lichFrameTwo = lichFive2;
+								break;
+						}
+						if (idleMode >= 1)
+						{
+							e.Graphics.DrawImage(lichFrameOne, g.screenX, g.screenY, g.squareSize, g.squareSize);
+						}
+						else
+						{
+							e.Graphics.DrawImage(lichFrameTwo, g.screenX, g.screenY, g.squareSize, g.squareSize);
+						}
+					}
+				}
 
-                else if (g.walled == true) // Walls
-                {
-                    e.Graphics.DrawImage(wallSprite, g.screenX, g.screenY, g.squareSize, g.squareSize);
-                }
-                else // Empty
-                {
-                    e.Graphics.FillRectangle(gridSpaceBrush, g.screenX, g.screenY, g.squareSize, g.squareSize);
-                }
-    
+				else if (g.walled == true) // Walls
+				{
+					e.Graphics.DrawImage(wallSprite, g.screenX, g.screenY, g.squareSize, g.squareSize);
+				}
+				else // Empty
+				{
+					e.Graphics.FillRectangle(gridSpaceBrush, g.screenX, g.screenY, g.squareSize, g.squareSize);
+				}
 
 
-            foreach (Enemy n in enemy) // Enemy sprites
-            {
 
-                Image enemyFrameOne = null, enemyFrameTwo = null;
-                switch (n.type)
-                {
-                    case 1:
-                        enemyFrameOne = enemyOne1;
-                        enemyFrameTwo = enemyOne2;
-                        break;
-                    case 2:
-                        enemyFrameOne = enemyTwo1;
-                        enemyFrameTwo = enemyTwo2;
-                        break;
-                    case 3:
-                        enemyFrameOne = enemyThree1;
-                        enemyFrameTwo = enemyThree2;
-                        break;
-                    case 4:
-                        enemyFrameOne = enemyFour1;
-                        enemyFrameTwo = enemyFour2;
-                        break;
-                    case 5:
-                        enemyFrameOne = enemyFive1;
-                        enemyFrameTwo = enemyFive2;
-                        break;
+				foreach (Enemy n in enemy) // Enemy sprites
+				{
 
-                    //sword case for boss levels
-                    case 6:
-                        enemyFrameOne = sword1;
-                        enemyFrameTwo = sword2;
-                        break;
-                }
+					Image enemyFrameOne = null, enemyFrameTwo = null;
+					switch (n.type)
+					{
+						case 1:
+							enemyFrameOne = enemyOne1;
+							enemyFrameTwo = enemyOne2;
+							break;
+						case 2:
+							enemyFrameOne = enemyTwo1;
+							enemyFrameTwo = enemyTwo2;
+							break;
+						case 3:
+							enemyFrameOne = enemyThree1;
+							enemyFrameTwo = enemyThree2;
+							break;
+						case 4:
+							enemyFrameOne = enemyFour1;
+							enemyFrameTwo = enemyFour2;
+							break;
+						case 5:
+							enemyFrameOne = enemyFive1;
+							enemyFrameTwo = enemyFive2;
+							break;
 
-                //Frame 1 case
-                if (idleMode >= 1)
-                {
-                    e.Graphics.DrawImage(enemyFrameOne, n.x, n.y, n.enemySize, n.enemySize);
-                }
-                //Frame 2 case
-                else
-                {
-                    e.Graphics.DrawImage(enemyFrameTwo, n.x, n.y, n.enemySize, n.enemySize);
-                }
-            }
-        }
-                }
-            }
-            else
-            {
-                foreach (Enemy n in enemy) // second frame of animation for enemy sprites
-                {
-                    if (n.type == 1)
-                    {
-                        e.Graphics.DrawImage(enemyOne2, n.x, n.y, n.enemySize, n.enemySize);
-                    }
-                    else if (n.type == 2)
-                    {
-                        e.Graphics.DrawImage(enemyTwo2, n.x, n.y, n.enemySize, n.enemySize);
-                    }
-                    else if (n.type == 3)
-                    {
-                        e.Graphics.DrawImage(enemyThree2, n.x, n.y, n.enemySize, n.enemySize);
-                    }
-                    else if (n.type == 4)
-                    {
-                        e.Graphics.DrawImage(enemyFour2, n.x, n.y, n.enemySize, n.enemySize);
-                    }
-                    else if (n.type == 5)
-                    {
-                        e.Graphics.DrawImage(enemyFive2, n.x, n.y, n.enemySize, n.enemySize);
-                    }
-                    else if (n.type == 6)
-                    {
-                        e.Graphics.DrawImage(sword2, n.x, n.y, n.enemySize, n.enemySize);
-                    }
-                }
-            }
-                }
-            }
-            else
-            {
-                foreach (Enemy n in enemy) // second frame of animation for enemy sprites
-                {
-                    if (n.type == 1)
-                    {
-                        e.Graphics.DrawImage(enemyOne2, n.x, n.y, n.enemySize, n.enemySize);
-            string levelFile = "Resources/Levels/level" + level + ".png";
-                    else if (n.type == 2)
-                    {
-                        e.Graphics.DrawImage(enemyTwo2, n.x, n.y, n.enemySize, n.enemySize);
-                    }
-                    else if (n.type == 3)
-                    {
-                        e.Graphics.DrawImage(enemyThree2, n.x, n.y, n.enemySize, n.enemySize);
-                    }
-                    else if (n.type == 4)
-                    {
-                        e.Graphics.DrawImage(enemyFour2, n.x, n.y, n.enemySize, n.enemySize);
-                    }
-                    else if (n.type == 5)
-                    {
-                        e.Graphics.DrawImage(enemyFive2, n.x, n.y, n.enemySize, n.enemySize);
-                    }
-                    else if (n.type == 6)
-                    {
-                        e.Graphics.DrawImage(sword2, n.x, n.y, n.enemySize, n.enemySize);
-                    }
-                }
-            }
+						//sword case for boss levels
+						case 6:
+							enemyFrameOne = sword1;
+							enemyFrameTwo = sword2;
+							break;
+					}
+
+					//Frame 1 case
+					if (idleMode >= 1)
+					{
+						e.Graphics.DrawImage(enemyFrameOne, n.x, n.y, n.enemySize, n.enemySize);
+					}
+					//Frame 2 case
+					else
+					{
+						e.Graphics.DrawImage(enemyFrameTwo, n.x, n.y, n.enemySize, n.enemySize);
+					}
+				}
+			}
+                
+           
 
 			// Colouring the player character
 			if (idleMode >= 1)
@@ -891,7 +822,7 @@ namespace Game_Summative
 			}
 			// Create a Bitmap object from an image file.
 
-            string levelFile = "Resources/level" + level + ".png";
+            string levelFile = "Resources/Levels/level" + level + ".png";
 
 			try
 			{
@@ -989,7 +920,6 @@ namespace Game_Summative
 				grid[oldPos].guarded = false;
 			}
 			//updating bots enemy list
-			Bot.enemies = enemy;
 		}
 
 		public void deathMethod() // Player Death Method
