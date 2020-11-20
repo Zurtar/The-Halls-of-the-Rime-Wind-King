@@ -22,10 +22,10 @@ namespace Game_Summative
 		int currentLevel = 1;
 
 		// Initialize the movement key booleans.
-		bool upDown, leftDown, downDown, rightDown, resetdown, pauseDown;
+		 bool upDown, leftDown, downDown, rightDown, resetdown, pauseDown;
 
 		// boolean to prevent accidental movement by requiring a new keypress before initializing movement
-		bool keyPress = false;
+		 bool keyPress = false;
 
 		// Set up the black and white brushes for colouring the grid in.
 		SolidBrush gridLineBrush = new SolidBrush(Color.Black);
@@ -87,15 +87,17 @@ namespace Game_Summative
 		int gridIndex;
 
 		// List of every enemy
-		List<Enemy> enemy = new List<Enemy>();
+		 List<Enemy> enemy = new List<Enemy>();
+
+		
 
 		// Setup for the movement locks
-		bool movingUp, movingRight, movingDown, movingLeft;
+		 bool movingUp, movingRight, movingDown, movingLeft;
 
 
 		bool reloaded = false;
 		// Detect when the player runs into traps
-		bool dead = false;
+		 bool dead = false;
 
 		// Score and move integers
 		int levelMoves;
@@ -159,7 +161,7 @@ namespace Game_Summative
 			loadLevel(currentLevel);
 		}
 
-		private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		public void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
 		{
 			// Detection for Joystick or buttons down
 			switch (e.KeyCode)
@@ -337,34 +339,42 @@ namespace Game_Summative
 
 			if (movingUp == false && movingRight == false && movingDown == false && movingLeft == false && keyPress == false && dead == false)
 			{
+				Bot.possibleMoveDirections.Clear();
+
 				// Tracking the number of moves for scoring
 
 				// knight.x = knight.x + 1; // Test for movement fuctionality.
 				if (upDown == true && knight.posY != 1) // Character upwards movement lock
 				{
+					Bot.possibleMoveDirections.Add(1);
 					movingUp = true;
 					keyPress = true;
 					levelMoves++;
 				}
 				if (rightDown == true && knight.posX != 7) // Character right movement lock
 				{
+					Bot.possibleMoveDirections.Add(2);
 					movingRight = true;
 					keyPress = true;
 					levelMoves++;
 				}
 				if (downDown == true && knight.posY != 7) // Character downwards movement lock
 				{
+					Bot.possibleMoveDirections.Add(3);
 					movingDown = true;
 					keyPress = true;
 					levelMoves++;
 				}
 				if (leftDown == true && knight.posX != 1) // Character left movement lock
 				{
+					Bot.possibleMoveDirections.Add(0);
 					movingLeft = true;
 					keyPress = true;
 					levelMoves++;
 				}
 			}
+
+			Bot.tickMove();
 
 			// Each region represents the logic for sliding in a direction
 			#region Moving Up
@@ -910,6 +920,8 @@ namespace Game_Summative
 				grid[newPos].guarded = true;
 				grid[oldPos].guarded = false;
 			}
+			//updating bots enemy list
+			Bot.enemies = enemy;
 		}
 
 		public void deathMethod() // Player Death Method

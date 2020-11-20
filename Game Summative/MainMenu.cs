@@ -12,6 +12,8 @@ namespace Game_Summative
 {
     public partial class MainMenu : UserControl
     {
+        public static GameScreen gs;
+
         public MainMenu()
         {
             InitializeComponent();
@@ -22,7 +24,7 @@ namespace Game_Summative
             // Loading the main Game Screen
             Form f = this.FindForm();
             f.Controls.Remove(this);
-            GameScreen gs = new GameScreen();
+             gs = new GameScreen();
             Form1.pauseReset = false;
             Form1.pauseMenu = false;
 
